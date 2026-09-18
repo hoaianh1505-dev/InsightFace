@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: customer-satisfaction-recognition
+    env: python
+    region: singapore
+    plan: free
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: gunicorn app:app --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.12
