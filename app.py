@@ -474,6 +474,9 @@ def start_pipeline():
     """Khởi động camera + AI + tracker + storage."""
     global _camera, _ai, _tracker, _storage, _running
 
+    if _running:
+        return True
+
     logger.info("=" * 50)
     logger.info("🚀 Khởi động hệ thống nhận diện cảm xúc...")
     logger.info("=" * 50)
@@ -524,12 +527,13 @@ def stop_pipeline():
     logger.info("Hệ thống đã dừng.")
 
 
+# Tự động khởi động pipeline khi Gunicorn load module
+start_pipeline()
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
-    if not start_pipeline():
-        sys.exit(1)
-
     try:
         app.run(
             host=config.FLASK_HOST,
@@ -542,3 +546,4 @@ if __name__ == "__main__":
         logger.info("\nDừng bởi người dùng.")
     finally:
         stop_pipeline()
+
