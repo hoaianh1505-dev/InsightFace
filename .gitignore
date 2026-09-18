@@ -1,0 +1,73 @@
+# ==========================================
+# .gitignore — Emotion / Satisfaction Recognition
+# ==========================================
+
+# ── Python & Environments ─────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ── Google Credentials & Secrets ──────────
+credentials.json
+*.pem
+*.key
+.env
+
+# ── Datasets & Large Model Weights ─────────
+dataset/
+models/emotion_model/*.h5
+models/emotion_model/*.hdf5
+models/emotion_model/*.keras
+!models/emotion_model/.gitkeep
+
+# ── Exported Reports & Exports ────────────
+exports/*.csv
+exports/*.xlsx
+!exports/.gitkeep
+
+# ── IDE & Editors ─────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS Generated Files ────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ── Logs & Debug ──────────────────────────
+*.log
+logs/

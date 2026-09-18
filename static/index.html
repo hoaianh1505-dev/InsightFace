@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hệ thống Đánh giá Mức độ Hài lòng Real-time</title>
+  <meta name="description" content="Demo đánh giá mức độ hài lòng khách hàng theo thời gian thực dựa trên cảm xúc khuôn mặt" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <span class="logo-icon">🧠</span>
+        <div>
+          <h1 class="logo-title">Đánh giá Mức độ Hài lòng Real-time</h1>
+          <p class="logo-sub">CNN FER2013 · Haar Cascade · Chu kỳ 5 giây</p>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="model-badge" id="modelBadge" title="Đổi mô hình AI">
+        🤖 <select id="modelSelect" class="model-select" onchange="onModelChange(this.value)">
+          <option value="">Đang tải model...</option>
+        </select>
+      </div>
+      <div class="status-badge" id="systemStatus">
+        <span class="status-dot"></span>
+        <span id="statusText">Đang khởi động...</span>
+      </div>
+      <div class="storage-badge" id="storageBadge" title="Phương thức lưu trữ">
+        💾 <span id="storageMode">--</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Main layout ────────────────────────────────────────────────────── -->
+  <main class="main-layout">
+
+    <!-- ── Cột trái: Camera ─────────────────────────────────────────────── -->
+    <section class="camera-section" aria-label="Camera feed">
+      <div class="section-title">
+        <span class="section-icon">📷</span> Camera Feed
+        <span class="fps-badge" id="fpsBadge">-- FPS</span>
+        <button id="btnToggleWebcam" class="btn-sm btn-outline" style="margin-left:auto" onclick="toggleWebcamSource()" aria-label="Bật/Tắt WebCam trình duyệt">
+          📷 Dùng WebCam trình duyệt
+        </button>
+      </div>
+
+      <!-- Camera stream -->
+      <div class="camera-container">
+        <img id="cameraFeed"
+             src="/video_feed"
+             alt="Camera stream đánh giá hài lòng"
+             class="camera-img"
+             onerror="this.src='/static/camera_error.svg'" />
+
+        <!-- Hidden WebCam Video & Canvas elements cho WebCam trình duyệt -->
+        <video id="webcamVideo" autoplay playsinline muted style="display:none;"></video>
+        <canvas id="webcamCanvas" style="display:none;"></canvas>
+
+        <!-- Overlay thông tin phía trên camera -->
+        <div class="camera-overlay">
+          <div class="overlay-left">
+            <span id="faceCountBadge" class="face-count">👤 0 khuôn mặt</span>
+          </div>
+          <div class="overlay-right">
+            <span id="cycleLabel" class="cycle-label">Chu kỳ 5s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trạng thái + countdown bar -->
+      <div class="cycle-panel">
+        <div class="cycle-info">
+          <div class="cycle-phase">
+            <span class="phase-dot" id="phaseDot"></span>
+            <span id="phaseText" class="phase-text">Chờ khuôn mặt...</span>
+          </div>
+          <div class="cycle-timer" id="cycleTimer">--.-s</div>
+        </div>
+        <div class="countdown-bar-container">
+          <div class="countdown-bar" id="countdownBar"></div>
+        </div>
+
+        <!-- Badge mức hài lòng hiện tại -->
+        <div class="current-emotion-panel" id="currentEmotionPanel">
+          <span class="emotion-label-text">Mức hài lòng:</span>
+          <span class="emotion-badge" id="currentEmotionBadge">--</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Cột phải: Records + Controls ─────────────────────────────────── -->
+    <aside class="records-section" aria-label="Danh sách bản ghi">
+
+      <!-- Thống kê tổng -->
+      <div class="stats-panel">
+        <div class="stats-title">📊 Thống kê phiên</div>
+        <div class="stats-grid" id="statsGrid">
+          <!-- Populated by JS -->
+        </div>
+        <div class="total-records">
+          Tổng: <strong id="totalRecords">0</strong> bản ghi
+        </div>
+      </div>
+
+      <!-- Nút điều khiển -->
+      <div class="controls-panel">
+        <button id="btnToggleRecognition" class="btn btn-start" onclick="toggleRecognition()" aria-label="Bật/Tắt Nhận diện">
+          <span class="btn-icon">▶️</span> Bắt đầu nhận diện
+        </button>
+        <button id="btnExport" class="btn btn-secondary" onclick="exportReport()" aria-label="Xuất báo cáo Excel">
+          <span class="btn-icon">📥</span> Xuất Excel
+        </button>
+        <button id="btnReset" class="btn btn-secondary" onclick="resetSession()" aria-label="Bắt đầu phiên mới">
+          <span class="btn-icon">🔄</span> Phiên mới
+        </button>
+      </div>
+
+      <!-- Bảng bản ghi -->
+      <div class="records-panel">
+        <div class="records-header">
+          <span class="records-title">📋 Danh sách bản ghi</span>
+          <span class="records-hint">Tự động cập nhật mỗi 5 giây</span>
+        </div>
+        <div class="table-wrapper">
+          <table class="records-table" id="recordsTable" aria-label="Bảng bản ghi mức hài lòng">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Mức hài lòng</th>
+                <th>Thời gian</th>
+                <th>Ổn định</th>
+                <th>Conf.</th>
+                <th>Frame</th>
+              </tr>
+            </thead>
+            <tbody id="recordsBody">
+              <tr class="empty-row">
+                <td colspan="6">Chưa có bản ghi. Để khuôn mặt trước camera...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </aside>
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <span>Hệ thống Nhận diện Cảm xúc · CNN FER2013 pre-trained · Chu kỳ <strong>5 giây</strong></span>
+    <span>Haar Cascade (Viola-Jones) · Input 48×48 grayscale</span>
+  </footer>
+
+  <!-- ── Toast notification ───────────────────────────────────────────────── -->
+  <div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+/* ============================================================
+   style.css — Dark theme cho Emotion Recognition Dashboard
+   ============================================================ */
+
+/* ── Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #0b0f1a;
+  --panel:       #111827;
+  --card:        #1e2433;
+  --border:      #2d3748;
+  --accent:      #6366f1;
+  --accent-glow: rgba(99, 102, 241, 0.25);
+  --text:        #e2e8f0;
+  --text-dim:    #94a3b8;
+  --text-muted:  #475569;
+
+  /* Emotion colors */
+  --c-angry:    #ef4444;
+  --c-fear:     #f97316;
+  --c-happy:    #22c55e;
+  --c-sad:      #60a5fa;
+  --c-surprise: #facc15;
+  --c-neutral:  #94a3b8;
+
+  --radius: 10px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-icon { font-size: 28px; }
+.logo-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.logo-sub { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
+
+.header-right { display: flex; align-items: center; gap: 10px; }
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.model-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.model-select {
+  background: transparent;
+  color: var(--text);
+  border: none;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  max-width: 180px;
+}
+.model-select option {
+  background: var(--panel);
+  color: var(--text);
+}
+
+/* ── Main Layout ─────────────────────────────────────────── */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 16px;
+  padding: 16px;
+  height: calc(100vh - 60px - 36px);
+  overflow: hidden;
+}
+
+/* ── Camera Section ──────────────────────────────────────── */
+.camera-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.section-icon { font-size: 14px; }
+.fps-badge {
+  margin-left: auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+}
+
+.camera-container {
+  position: relative;
+  flex: 1;
+  background: #000;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.camera-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.camera-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 10px 12px;
+  pointer-events: none;
+}
+
+.face-count, .cycle-label {
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: var(--text);
+}
+
+/* ── Cycle Panel (bên dưới camera) ───────────────────────── */
+.cycle-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+}
+
+.cycle-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.cycle-phase {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.phase-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: background 0.3s, box-shadow 0.3s;
+}
+.phase-dot.observing {
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: pulse 1s infinite;
+}
+
+.phase-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.cycle-timer {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+
+.countdown-bar-container {
+  background: var(--card);
+  border-radius: 4px;
+  height: 6px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.countdown-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), #818cf8);
+  border-radius: 4px;
+  transition: width 0.3s linear, background 0.3s;
+}
+.countdown-bar.near-end {
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.current-emotion-panel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.emotion-label-text {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+.emotion-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #fff;
+  background: var(--text-muted);
+  transition: background 0.4s, transform 0.2s;
+  letter-spacing: 0.02em;
+}
+.emotion-badge.new-record {
+  animation: badgePop 0.4s ease;
+}
+@keyframes badgePop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* ── Records Section ─────────────────────────────────────── */
+.records-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+/* ── Stats Panel ─────────────────────────────────────────── */
+.stats-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+}
+.stats-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--card);
+  border-radius: 8px;
+  padding: 6px 4px;
+  border: 1px solid var(--border);
+  cursor: default;
+  transition: transform 0.15s;
+}
+.stat-item:hover { transform: translateY(-1px); }
+.stat-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-bottom: 3px;
+}
+.stat-emotion {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-align: center;
+  font-weight: 500;
+}
+.stat-count {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+.total-records {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: right;
+}
+.total-records strong { color: var(--accent); }
+
+/* ── Controls Panel ──────────────────────────────────────── */
+.controls-panel {
+  display: flex;
+  gap: 8px;
+}
+.btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-sm {
+  flex: initial;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: 6px;
+}
+.btn-outline {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+}
+.btn-outline:hover {
+  background: var(--card);
+  color: var(--text);
+  border-color: var(--accent);
+}
+.btn-outline.btn-active {
+  background: var(--accent) !important;
+  color: #fff !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+.btn-start {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3);
+}
+.btn-start:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+}
+.btn-pause {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+}
+.btn-pause:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+}
+
+/* ── Records Panel ───────────────────────────────────────── */
+.records-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+.records-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.records-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.records-hint { font-size: 10px; color: var(--text-muted); }
+
+.table-wrapper {
+  overflow-y: auto;
+  flex: 1;
+}
+.table-wrapper::-webkit-scrollbar { width: 5px; }
+.table-wrapper::-webkit-scrollbar-track { background: var(--card); }
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.records-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.records-table th {
+  position: sticky;
+  top: 0;
+  background: var(--card);
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  z-index: 1;
+}
+.records-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(45, 55, 72, 0.5);
+  vertical-align: middle;
+}
+.records-table tbody tr {
+  transition: background 0.15s;
+}
+.records-table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.06);
+}
+.records-table tbody tr.new-row {
+  animation: slideIn 0.4s ease;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.emotion-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 11px;
+  color: #fff;
+}
+
+.empty-row td {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 32px;
+  font-style: italic;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 20px;
+  background: var(--panel);
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ── Toast ───────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 50px;
+  right: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 13px;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+  max-width: 320px;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Emotion color utilities ─────────────────────────────── */
+.emotion-Tức-giận   { background: var(--c-angry); }
+.emotion-Sợ-hãi     { background: var(--c-fear); }
+.emotion-Vui-vẻ     { background: var(--c-happy); }
+.emotion-Buồn-bã    { background: var(--c-sad); }
+.emotion-Ngạc-nhiên { background: var(--c-surprise); }
+.emotion-Trung-tính { background: var(--c-neutral); }
+
+/* Badge màu theo cảm xúc */
+[data-emotion="Tức giận"]   { background: var(--c-angry) !important; }
+[data-emotion="Sợ hãi"]     { background: var(--c-fear) !important; }
+[data-emotion="Vui vẻ"]     { background: var(--c-happy) !important; }
+[data-emotion="Buồn bã"]    { background: var(--c-sad) !important; }
+[data-emotion="Ngạc nhiên"] { background: var(--c-surprise) !important; color: #1a1a1a !important; }
+[data-emotion="Trung tính"] { background: var(--c-neutral) !important; }
+
+/* ── Responsive (nhỏ hơn 1100px) ────────────────────────── */
+@media (max-width: 1100px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    overflow-y: auto;
+    height: auto;
+  }
+  html, body { overflow: auto; }
+  .camera-container { height: 360px; }
+}
