@@ -272,7 +272,23 @@ class EmotionClassifier:
             return self._labels[idx], float(probs[idx]), probs
 
         try:
-            probs = self._model.predict(input_tensor, verbose=0)[0]
+            # Tự động điều chỉnh kích thước & chuẩn hóa theo input_shape của model đang nạp
+            model_tensor = input_tensor
+            if hasattr(self._model, "input_shape") and self._model.input_shape:
+                req_shape = self._model.input_shape
+                if len(req_shape) == 4 and req_shape[1] is not None and req_shape[2] is not None:
+                    target_h, target_w = req_shape[1], req_shape[2]
+                    # Nếu model yêu cầu 64x64 (ví dụ fer2013_mini_XCEPTION)
+                    if input_tensor.shape[1] != target_h or input_tensor.shape[2] != target_w:
+                        sq_img = input_tensor[0, :, :, 0]
+                        resized = cv2.resize(sq_img, (target_w, target_h), interpolation=cv2.INTER_AREA)
+                        model_tensor = resized.reshape(1, target_h, target_w, 1)
+
+                    # Chuẩn hóa về [-1, 1] nếu là model pre-trained 64x64
+                    if target_h == 64:
+                        model_tensor = (model_tensor - 0.5) * 2.0
+
+            probs = self._model.predict(model_tensor, verbose=0)[0]
             idx   = int(np.argmax(probs))
 
             # Tự động phát hiện số lớp output (4 lớp hài lòng, 6 lớp cảm xúc, 7 lớp FER2013)
