@@ -134,8 +134,9 @@ class EmotionClassifier:
         """Tải model từ file, hoặc tải tự động từ internet."""
         model_dir = os.path.join(config.MODELS_DIR, "emotion_model")
 
-        # Các đường dẫn thử theo thứ tự (ưu tiên my_custom_model.h5)
+        # Các đường dẫn thử theo thứ tự (mặc định fer2013_mini_XCEPTION.hdf5)
         candidates = [
+            os.path.join(model_dir, "fer2013_mini_XCEPTION.hdf5"),
             os.path.join(model_dir, "my_custom_model.h5"),
             model_path,
             os.path.join(model_dir, "emotion_model.h5"),
