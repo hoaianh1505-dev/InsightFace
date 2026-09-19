@@ -132,12 +132,22 @@ class EmotionClassifier:
 
     def _load_or_download(self, model_path: str):
         """Tải model từ file, hoặc tải tự động từ internet."""
-        # Các đường dẫn thử theo thứ tự
+        model_dir = os.path.join(config.MODELS_DIR, "emotion_model")
+
+        # Các đường dẫn thử theo thứ tự (ưu tiên my_custom_model.h5)
         candidates = [
+            os.path.join(model_dir, "my_custom_model.h5"),
             model_path,
-            os.path.join(config.MODELS_DIR, "emotion_model", "emotion_model.h5"),
-            os.path.join(config.MODELS_DIR, "emotion_model", "fer2013_mini_XCEPTION.102-0.66.hdf5"),
+            os.path.join(model_dir, "emotion_model.h5"),
+            os.path.join(model_dir, "fer2013_mini_XCEPTION.102-0.66.hdf5"),
         ]
+
+        if os.path.exists(model_dir):
+            for f in os.listdir(model_dir):
+                if f.endswith((".h5", ".hdf5", ".keras")):
+                    full_path = os.path.join(model_dir, f)
+                    if full_path not in candidates:
+                        candidates.append(full_path)
 
         for path in candidates:
             if path and os.path.exists(path):
@@ -266,7 +276,12 @@ class EmotionClassifier:
 
             # Tự động phát hiện số lớp output (4 lớp hài lòng hoặc 6 lớp cảm xúc gốc)
             if len(probs) == 4:
-                labels_4 = ["Rất hài lòng", "Hài lòng", "Bình thường", "Không hài lòng"]
+                # Keras image_dataset_from_directory tự động sắp xếp tên thư mục theo ABC:
+                # 0: binh_thuong     -> Bình thường
+                # 1: hai_long        -> Hài lòng
+                # 2: khong_hai_long  -> Không hài lòng
+                # 3: rat_hai_long    -> Rất hài lòng
+                labels_4 = ["Bình thường", "Hài lòng", "Không hài lòng", "Rất hài lòng"]
                 return labels_4[idx], float(probs[idx]), probs
             elif len(probs) < len(self._labels):
                 return f"Class_{idx}", float(probs[idx]), probs
