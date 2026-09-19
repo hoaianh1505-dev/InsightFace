@@ -31,6 +31,8 @@ let cycleDuration   = 5;   // Sẽ cập nhật từ /api/info
 let allRecords      = [];
 let emotionCounts   = {};
 let lastEmotionBadge = null;
+let isRecognitionActive = true;
+
 
 // ── DOM References ───────────────────────────────────────────────────────────
 
@@ -296,6 +298,38 @@ function appendRecord(record, animate = true) {
 }
 
 // ── Nút điều khiển ────────────────────────────────────────────────────────────
+
+async function toggleRecognition() {
+  try {
+    const resp = await fetch("/api/toggle_recognition", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ active: !isRecognitionActive }),
+    });
+    const res = await resp.json();
+    if (resp.ok) {
+      isRecognitionActive = res.is_active;
+      updateRecognitionButton(isRecognitionActive);
+      showToast(res.message);
+    } else {
+      showToast("❌ Lỗi: " + (res.error || "Không thể đổi trạng thái"));
+    }
+  } catch (e) {
+    showToast("❌ Lỗi mạng: " + e.message);
+  }
+}
+
+function updateRecognitionButton(isActive) {
+  const btn = document.getElementById("btnToggleRecognition");
+  if (!btn) return;
+  if (isActive) {
+    btn.className = "btn btn-pause";
+    btn.innerHTML = '<span class="btn-icon">⏸️</span> Tạm dừng nhận diện';
+  } else {
+    btn.className = "btn btn-start";
+    btn.innerHTML = '<span class="btn-icon">▶️</span> Bắt đầu nhận diện';
+  }
+}
 
 function exportReport() {
   const btn = document.getElementById("btnExport");
