@@ -274,7 +274,7 @@ class EmotionClassifier:
             probs = self._model.predict(input_tensor, verbose=0)[0]
             idx   = int(np.argmax(probs))
 
-            # Tự động phát hiện số lớp output (4 lớp hài lòng hoặc 6 lớp cảm xúc gốc)
+            # Tự động phát hiện số lớp output (4 lớp hài lòng, 6 lớp cảm xúc, 7 lớp FER2013)
             if len(probs) == 4:
                 # Keras image_dataset_from_directory tự động sắp xếp tên thư mục theo ABC:
                 # 0: binh_thuong     -> Bình thường
@@ -283,10 +283,17 @@ class EmotionClassifier:
                 # 3: rat_hai_long    -> Rất hài lòng
                 labels_4 = ["Bình thường", "Hài lòng", "Không hài lòng", "Rất hài lòng"]
                 return labels_4[idx], float(probs[idx]), probs
-            elif len(probs) < len(self._labels):
+            elif len(probs) == 7:
+                # FER2013 mini-XCEPTION 7 classes: angry, disgust, fear, happy, sad, surprise, neutral
+                labels_7 = ["Tức giận", "Tức giận", "Sợ hãi", "Vui vẻ", "Buồn bã", "Ngạc nhiên", "Trung tính"]
+                return labels_7[idx], float(probs[idx]), probs
+            elif len(probs) == 6:
+                labels_6 = ["Tức giận", "Sợ hãi", "Vui vẻ", "Buồn bã", "Ngạc nhiên", "Trung tính"]
+                return labels_6[idx], float(probs[idx]), probs
+            elif idx < len(self._labels):
+                return self._labels[idx], float(probs[idx]), probs
+            else:
                 return f"Class_{idx}", float(probs[idx]), probs
-
-            return self._labels[idx], float(probs[idx]), probs
         except Exception as e:
             logger.error(f"Lỗi predict: {e}")
             probs = np.ones(len(self._labels), dtype=np.float32) / len(self._labels)
