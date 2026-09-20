@@ -78,11 +78,15 @@ function populateModelSelect(models, currentModel) {
     return;
   }
 
-  select.innerHTML = models.map(m => `
-    <option value="${m}" ${m === currentModel ? "selected" : ""}>
-      ${m}
-    </option>
-  `).join("");
+  select.innerHTML = models.map(m => {
+    let displayName = m;
+    if (m === "fer2013_mini_XCEPTION.hdf5") {
+      displayName = "Mô hình Mặc định (FER2013)";
+    } else if (m === "my_custom_model.h5") {
+      displayName = "Mô hình Tự huấn luyện (Custom)";
+    }
+    return `<option value="${m}" ${m === currentModel ? "selected" : ""}>${displayName}</option>`;
+  }).join("");
 }
 
 async function onModelChange(selectedModel) {
