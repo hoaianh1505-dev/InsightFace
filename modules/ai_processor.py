@@ -289,6 +289,7 @@ class EmotionClassifier:
                         model_tensor = (model_tensor - 0.5) * 2.0
 
             probs = self._model.predict(model_tensor, verbose=0)[0]
+            idx   = int(np.argmax(probs))
 
             # Tự động phát hiện số lớp output (4 lớp hài lòng, 6 lớp cảm xúc, 7 lớp FER2013)
             if len(probs) == 4:
@@ -298,38 +299,17 @@ class EmotionClassifier:
                 # 2: khong_hai_long  -> Không hài lòng
                 # 3: rat_hai_long    -> Rất hài lòng
                 labels_4 = ["Bình thường", "Hài lòng", "Không hài lòng", "Rất hài lòng"]
-                idx = int(np.argmax(probs))
                 return labels_4[idx], float(probs[idx]), probs
-
             elif len(probs) == 7:
                 # FER2013 mini-XCEPTION 7 classes: 0:angry, 1:disgust, 2:fear, 3:happy, 4:sad, 5:surprise, 6:neutral
-                # Tổng hợp xác suất các cảm xúc tiêu cực (tức giận, ghê tởm, sợ hãi, buồn bã) để không bị xé nhỏ
-                p_rat_hai_long   = float(probs[3])                         # Happy
-                p_hai_long       = float(probs[5])                         # Surprise
-                p_binh_thuong    = float(probs[6])                         # Neutral
-                p_khong_hai_long = float(probs[0] + probs[1] + probs[2] + probs[4]) # Angry + Disgust + Fear + Sad
-
-                sat_labels = ["Rất hài lòng", "Hài lòng", "Bình thường", "Không hài lòng"]
-                sat_scores = [p_rat_hai_long, p_hai_long, p_binh_thuong, p_khong_hai_long]
-                best_idx   = int(np.argmax(sat_scores))
-                return sat_labels[best_idx], float(sat_scores[best_idx]), probs
-
+                labels_7 = ["Tức giận", "Tức giận", "Sợ hãi", "Vui vẻ", "Buồn bã", "Ngạc nhiên", "Trung tính"]
+                return labels_7[idx], float(probs[idx]), probs
             elif len(probs) == 6:
-                # 6 classes: 0:angry, 1:fear, 2:happy, 3:sad, 4:surprise, 5:neutral
-                p_rat_hai_long   = float(probs[2])
-                p_hai_long       = float(probs[4])
-                p_binh_thuong    = float(probs[5])
-                p_khong_hai_long = float(probs[0] + probs[1] + probs[3])
-
-                sat_labels = ["Rất hài lòng", "Hài lòng", "Bình thường", "Không hài lòng"]
-                sat_scores = [p_rat_hai_long, p_hai_long, p_binh_thuong, p_khong_hai_long]
-                best_idx   = int(np.argmax(sat_scores))
-                return sat_labels[best_idx], float(sat_scores[best_idx]), probs
-
+                labels_6 = ["Tức giận", "Sợ hãi", "Vui vẻ", "Buồn bã", "Ngạc nhiên", "Trung tính"]
+                return labels_6[idx], float(probs[idx]), probs
+            elif idx < len(self._labels):
+                return self._labels[idx], float(probs[idx]), probs
             else:
-                idx = int(np.argmax(probs))
-                if idx < len(self._labels):
-                    return self._labels[idx], float(probs[idx]), probs
                 return f"Class_{idx}", float(probs[idx]), probs
         except Exception as e:
             logger.error(f"Lỗi predict: {e}")
