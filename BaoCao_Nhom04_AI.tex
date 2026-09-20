@@ -1,0 +1,483 @@
+\newcommand{\safeimage}[2][]{%
+  \IfFileExists{#2}{\includegraphics[#1]{#2}}{\rule{0pt}{0pt}}%
+}
+\documentclass{iaesarticle}
+
+%%required package. add for your convenient, but do not remove the initial
+\setlength{\headsep}{0.15in}
+\usepackage{amsmath, amsfonts, amssymb, float, fancyhdr}
+\usepackage[figuresright]{rotating}
+\usepackage{authblk, graphicx, indentfirst, lastpage, lipsum}
+\usepackage{pifont}
+\renewcommand{\Authsep}{, }
+\renewcommand{\Authand}{, }
+\renewcommand{\Authands}{, }
+\setlength{\affilsep}{0cm}
+\renewcommand\Authfont{\normalsize}
+\renewcommand\Affilfont{\fontsize{8}{10}\mdseries}
+\makeatletter
+\renewcommand{\@biblabel}[1]{[#1]\hfill}
+\renewcommand\AB@authnote[1]{\textsuperscript{\normalfont\bfseries#1}}
+\makeatother
+\usepackage[font=normalsize]{subfig, caption}
+\usepackage{epstopdf}
+\usepackage[left=3cm, right=2.5cm, top=2.5cm, bottom=2.5cm, includehead, includefoot]{geometry}
+\usepackage[justification=centering]{caption}
+\captionsetup{labelsep=period}
+\usepackage{titlesec}
+\usepackage[table]{xcolor}
+\titleformat{\section}
+{\normalfont\normalsize\bfseries\uppercase}{\thesection}{1.7em}{}
+\titleformat{\subsection}
+{\normalfont\normalsize\bfseries}{\thesubsection}{.95em}{}
+\titleformat{\subsubsection}
+{\bfseries}{\thesubsubsection}{.2em}{}
+\titlespacing*{\section}{0cm}{0.7cm}{0cm}
+\usepackage{enumitem}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{ragged2e}
+\usepackage{hyperref,graphicx}
+\usepackage{multirow}
+\usepackage{fleqn}
+
+\CopyrightLine[]{}{\textit{This is an open access article under the \textcolor{blue}{\underline{CC BY-SA}} license.}
+\vspace{.5em}}
+
+%%author
+\author[1]{\bfseries Đổ Hoài Anh}
+\author[1]{\bfseries Trương Văn Triều Vĩ}
+\author[2]{\bfseries Trần Thanh Vinh}
+\author[3]{\bfseries Nguyễn Lê Tân Phú}
+\author[4]{\bfseries Lê Minh Triết}
+
+%%author's affiliation
+\affil[1]{Ngành Công nghệ Thông tin, Trường Đại học Giao thông Vận tải TP. Hồ Chí Minh, Việt Nam}
+\affil[2]{Chuyên ngành Cơ điện tử Ô tô, Trường Đại học Giao thông Vận tải TP. Hồ Chí Minh, Việt Nam}
+\affil[3]{Ngành Quản lý Cảng và Logistics, Trường Đại học Giao thông Vận tải TP. Hồ Chí Minh, Việt Nam}
+\affil[4]{Ngành Ngôn ngữ Anh, Trường Đại học Giao thông Vận tải TP. Hồ Chí Minh, Việt Nam}
+
+%%title and shorttitle (for footer)
+\title{Ứng dụng trí tuệ nhân tạo nhận diện cảm xúc khuôn mặt để đánh giá mức độ hài lòng khách hàng theo thời gian thực.}
+
+\shorttitle{Hệ Thống AI Đánh Giá Mức Độ Hài Lòng Khách Hàng Qua Khuôn Mặt}
+
+\begin{document}
+\setcounter{page}{1}
+\setlength{\parindent}{1.27cm}
+
+\pagestyle{fancy}
+\fancyhfoffset{0cm}
+
+%%journal info
+\journalname{TRƯỜNG ĐẠI HỌC GIAO THÔNG VẬN TẢI TP. HỒ CHÍ MINH}
+\journalshortname{Báo cáo học phần Trí tuệ nhân tạo và Ứng dụng}
+\journalhomepage{}
+\vol{Nhóm 04}
+\no{}
+\months{Tháng 09}
+\years{2026}
+\issn{}
+\DOI{}
+\pagefirst{1}
+\pagelast{13}
+\IDpaper{}
+
+\maketitle
+
+\hrule
+\vspace{.1em}
+\hrule
+\vspace{.5em}
+\noindent
+\parbox[t][][s]{0.315\textwidth}{%
+\textbf{THÔNG TIN BÁO CÁO}
+\vspace{.5em}
+\hrule
+\vspace{.5em}
+\begin{history}
+\vspace{.5em}
+Received September 04, 2026
+
+Revised September 10, 2026
+
+Accepted September 15, 2026
+\vspace{.7em}
+\end{history}
+\vspace{.5em}
+\hrule
+\vspace{.5em}
+\begin{keyword}
+\vspace{.5em}
+Trí tuệ nhân tạo \sep Nhận diện cảm xúc \sep Mức độ hài lòng khách hàng \sep Học sâu \sep Thị giác máy tính \sep Bảng điều khiển Web \sep Dịch vụ thông minh
+\vspace{.5em}
+\end{keyword}
+\vspace{\fill}
+}
+\parbox{0.020\textwidth}{\hspace{0.5em}}
+\parbox[t][][s]{0.65\textwidth}{%
+\begin{abstract}
+\vspace{.3em}
+Trong bối cảnh chuyển đổi số, việc nắm bắt cảm xúc khách hàng theo thời gian thực đóng vai trò quan trọng trong việc nâng cao chất lượng dịch vụ tại các điểm tiếp xúc như quầy tiếp nhận hay khu vực phục vụ. Báo cáo trình bày quá trình xây dựng một hệ thống ứng dụng trí tuệ nhân tạo nhận diện biểu cảm khuôn mặt khách hàng qua camera, quy đổi thành bốn cấp độ hài lòng: rất hài lòng, hài lòng, bình thường và không hài lòng, theo từng chu kỳ quan sát 5 giây.
+
+Hệ thống được xây dựng dưới dạng ứng dụng Web với bảng điều khiển (dashboard) trực quan, hỗ trợ hai nguồn camera (camera máy chủ và webcam trình duyệt), cho phép người dùng chủ động bật/tắt nhận diện, và linh hoạt chuyển đổi giữa mô hình trí tuệ nhân tạo có sẵn với mô hình do nhóm tự huấn luyện. Toàn bộ kết quả nhận diện được tự động lưu trữ lên Google Sheets hoặc tệp cục bộ, đồng thời hỗ trợ xuất báo cáo thống kê dưới dạng tệp Excel.
+
+Kết quả thử nghiệm bước đầu cho thấy hệ thống hoạt động ổn định theo thời gian thực, cung cấp dữ liệu trực quan hỗ trợ nhân viên và quản lý theo dõi xu hướng hài lòng của khách hàng, đồng thời chỉ ra một số hạn chế và hướng phát triển tiếp theo của đề tài.
+\end{abstract}
+    }
+\parbox[l]{\textwidth}{%
+\rule{0.275\textwidth}{0.5pt} \hspace{0.5cm} \hrulefill
+\\
+\emph{\textbf{Corresponding Author:}}
+\vspace{.5em}\\
+Đổ Hoài Anh\\
+Ngành Công nghệ Thông tin, Trường Đại học Giao thông Vận tải TP. Hồ Chí Minh\\
+Giảng viên hướng dẫn: Thầy Đặng Nhân Cách
+% TODO: điền email nhóm vào chỗ này, ví dụ nhom04.ai@ut.edu.vn
+}
+\vspace{.5em}
+\hrule
+\vspace{.1em}
+\hrule
+
+%% ============================================================
+\section{Chương 1. Giới thiệu}
+\label{sec:intro}
+
+\subsection{Bối cảnh và lý do chọn đề tài}
+Trong những năm gần đây, trí tuệ nhân tạo (AI) ngày càng được ứng dụng rộng rãi trong các ngành dịch vụ có tính tương tác cao với con người. Một trong những hướng ứng dụng nổi bật là nhận diện cảm xúc con người thông qua biểu cảm khuôn mặt, dựa trên nền tảng thị giác máy tính và học sâu. Khả năng "đọc hiểu" cảm xúc khách hàng theo thời gian thực mở ra cơ hội để nhân viên phục vụ chủ động điều chỉnh cách phục vụ, từ đó nâng cao sự hài lòng và chất lượng trải nghiệm tổng thể.
+
+Trên thực tế, việc quan sát và đánh giá cảm xúc khách hàng hiện vẫn chủ yếu dựa vào kinh nghiệm cá nhân của nhân viên, mang tính chủ quan, không đồng nhất và khó theo dõi liên tục trong suốt ca làm việc. Xuất phát từ đó, nhóm hướng đến xây dựng một công cụ hỗ trợ quan sát cảm xúc khách hàng một cách tự động, trực quan và dễ sử dụng ngay trên trình duyệt web, không đòi hỏi cài đặt phần mềm phức tạp.
+
+\subsection{Vấn đề nghiên cứu}
+Vấn đề đặt ra là: \textit{làm thế nào để xây dựng một công cụ tự động, dễ triển khai, có khả năng quan sát và lượng hóa mức độ hài lòng của khách hàng theo thời gian thực, đồng thời lưu trữ và tổng hợp dữ liệu phục vụ cho việc theo dõi và ra quyết định của người quản lý?} Đây là bài toán mang tính ứng dụng, đòi hỏi cân bằng giữa độ chính xác của mô hình nhận diện, tốc độ xử lý thời gian thực, và sự thuận tiện khi triển khai thực tế trên nhiều loại thiết bị.
+
+\subsection{Mục tiêu nghiên cứu}
+Trên cơ sở đó, nhóm nghiên cứu đề xuất xây dựng một hệ thống web hỗ trợ đánh giá mức độ hài lòng khách hàng thông qua biểu cảm khuôn mặt. Các mục tiêu cụ thể bao gồm:
+\begin{itemize}[topsep=0.3ex, itemsep=0.3ex, parsep=0.2ex]
+	\item[-] Xây dựng hệ thống nhận diện khuôn mặt và phân loại cảm xúc theo thời gian thực, quy đổi thành bốn cấp độ hài lòng dễ hiểu cho người quản lý.
+	\item[-] Thiết kế giao diện Web dashboard trực quan, hỗ trợ linh hoạt nguồn camera và cho phép người dùng chủ động kiểm soát việc bật/tắt nhận diện.
+	\item[-] Cho phép chuyển đổi linh hoạt giữa mô hình trí tuệ nhân tạo có sẵn và mô hình do người dùng tự huấn luyện.
+	\item[-] Xây dựng cơ chế lưu trữ dữ liệu tự động và xuất báo cáo thống kê phục vụ công tác quản lý.
+\end{itemize}
+
+\subsection{Phạm vi nghiên cứu}
+Hệ thống giới hạn trong phạm vi nhận diện cảm xúc thông qua biểu cảm khuôn mặt theo từng khung hình video thu được từ camera, chưa xét đến các tín hiệu đa phương thức khác như giọng nói hay ngôn ngữ cơ thể. Dữ liệu thử nghiệm được thu thập trong môi trường mô phỏng, chưa triển khai chính thức tại một cơ sở dịch vụ thực tế.
+
+\subsection{Bố cục báo cáo}
+Báo cáo gồm bốn chương: Chương 1 giới thiệu tổng quan về đề tài; Chương 2 trình bày cơ sở lý thuyết liên quan; Chương 3 mô tả phương pháp và cách xây dựng hệ thống; Chương 4 trình bày kết quả, thảo luận và hướng phát triển.
+
+%% ============================================================
+\section{Chương 2. Cơ sở lý thuyết}
+\label{sec:theory}
+
+\subsection{Trí tuệ nhân tạo và học máy}
+Trí tuệ nhân tạo là lĩnh vực khoa học máy tính nghiên cứu việc xây dựng các hệ thống có khả năng thực hiện những tác vụ vốn đòi hỏi trí thông minh của con người. Học sâu (deep learning) là một nhánh của học máy, sử dụng các mạng nơ-ron nhân tạo nhiều lớp để tự động trích xuất đặc trưng từ dữ liệu ảnh, đặc biệt hiệu quả trong các bài toán nhận diện hình ảnh và khuôn mặt \citep{lecun2015, goodfellow2016}.
+
+\subsection{Thị giác máy tính và bài toán phát hiện khuôn mặt}
+Thị giác máy tính là lĩnh vực cho phép máy tính "nhìn" và diễn giải nội dung hình ảnh hoặc video. Trong bài toán nhận diện cảm xúc, bước đầu tiên là phát hiện khuôn mặt trong khung hình, thường sử dụng các thuật toán như Haar Cascade \citep{viola2001} hoặc các mạng nơ-ron nhẹ. Sau khi khuôn mặt được phát hiện và cắt ra khỏi ảnh gốc, ảnh khuôn mặt được tiền xử lý (chuẩn hóa kích thước, chuyển ảnh xám, chuẩn hóa giá trị pixel) trước khi đưa vào mô hình phân loại cảm xúc.
+
+\begin{figure}[H]
+\centering
+\safeimage[width=0.95\linewidth]{hinh1.png}
+\vspace{.7em}
+\caption{Sơ đồ quy trình tổng quát của hệ thống nhận diện cảm xúc khuôn mặt}
+\end{figure}
+% \noindent\textit{Mô tả hình 1: Sơ đồ khối thể hiện luồng xử lý từ camera → phát hiện khuôn mặt → tiền xử lý → mô hình AI → kết quả cảm xúc → lưu trữ/hiển thị.}
+
+\subsection{Mạng nơ-ron tích chập và học chuyển giao}
+Mạng nơ-ron tích chập (CNN) là kiến trúc học sâu phổ biến nhất cho các bài toán xử lý ảnh, nhờ khả năng tự động trích xuất đặc trưng không gian như cạnh, góc và kết cấu khuôn mặt. Trong thực tế, việc huấn luyện một mạng CNN từ đầu đòi hỏi khối lượng dữ liệu lớn và tài nguyên tính toán đáng kể. Vì vậy, một hướng tiếp cận phổ biến là sử dụng các mô hình đã được huấn luyện sẵn (pre-trained) trên các bộ dữ liệu chuẩn như FER-2013 \citep{goodfellow2013}, sau đó có thể tinh chỉnh lại (fine-tuning) trên tập dữ liệu riêng thông qua kỹ thuật học chuyển giao (transfer learning) để phù hợp hơn với bối cảnh triển khai thực tế \citep{howard2017}.
+
+\begin{figure}[H]
+\centering
+\safeimage[width=0.95\linewidth]{hinh2.png}
+\vspace{.7em}
+\caption{Minh họa kiến trúc mạng CNN dùng trong phân loại cảm xúc khuôn mặt}
+\end{figure}
+% \noindent\textit{Mô tả hình 2: Sơ đồ minh họa các lớp Convolution – Pooling – Fully Connected của mô hình phân loại cảm xúc.}
+
+\subsection{Từ cảm xúc cơ bản đến mức độ hài lòng khách hàng}
+Các bộ dữ liệu chuẩn về cảm xúc khuôn mặt như FER-2013 thường sử dụng sáu nhãn cảm xúc cơ bản: vui vẻ, buồn bã, tức giận, ngạc nhiên, sợ hãi và trung tính \citep{ekman1971}. Tuy nhiên, đối với bài toán đánh giá chất lượng dịch vụ, người quản lý thường quan tâm đến mức độ hài lòng tổng quát hơn là từng loại cảm xúc chi tiết. Vì vậy, hệ thống của nhóm quy đổi sáu nhãn cảm xúc cơ bản thành bốn cấp độ hài lòng, được trình bày trong Bảng \ref{tab:mapping}.
+
+\begin{table}[H]
+	\centering
+	\fontsize{8pt}{10pt}\selectfont
+	\caption{Quy đổi từ cảm xúc cơ bản sang bốn cấp độ hài lòng khách hàng}
+	\label{tab:mapping}
+	\begin{tabular}{clp{6.5cm}}
+		\hline
+		STT & Cấp độ hài lòng & Cảm xúc cơ bản tương ứng \\
+		\hline
+		1 & Rất hài lòng & Vui vẻ, hào hứng \\
+		2 & Hài lòng & Thích thú, ngạc nhiên tích cực \\
+		3 & Bình thường & Trung tính, không biểu lộ cảm xúc rõ rệt \\
+		4 & Không hài lòng & Buồn bã, khó chịu, tức giận, sợ hãi \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{Vai trò của bảng điều khiển Web trong giám sát dịch vụ}
+Việc trình bày kết quả nhận diện dưới dạng bảng điều khiển (dashboard) trên nền tảng Web mang lại nhiều lợi ích: không yêu cầu cài đặt phần mềm riêng trên từng thiết bị, dễ dàng truy cập từ nhiều loại máy tính hoặc trình duyệt, và thuận tiện cho việc theo dõi số liệu thống kê theo thời gian thực \citep{opencv, tensorflow}.
+
+%% ============================================================
+\section{Chương 3. Phương pháp và xây dựng hệ thống}
+\label{sec:method}
+
+\subsection{Thiết kế tổng thể hệ thống}
+Hệ thống được thiết kế theo kiến trúc ba mô-đun chính, đảm bảo có thể mở rộng hoặc thay thế từng thành phần độc lập:
+\begin{itemize}[topsep=0.3ex, itemsep=0.3ex, parsep=0.2ex]
+	\item[-] \textbf{Mô-đun thu nhận hình ảnh:} lấy hình ảnh từ camera theo thời gian thực.
+	\item[-] \textbf{Mô-đun xử lý AI:} phát hiện khuôn mặt và phân loại cảm xúc.
+	\item[-] \textbf{Mô-đun hiển thị và lưu trữ:} hiển thị kết quả lên dashboard, đồng thời ghi lại dữ liệu và hỗ trợ xuất báo cáo.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\safeimage[width=0.95\linewidth]{hinh3.png}
+\vspace{.7em}
+\caption{Kiến trúc tổng thể ba mô-đun của hệ thống}
+\end{figure}
+% \noindent\textit{Mô tả hình 3: Sơ đồ kiến trúc hệ thống gồm 3 khối: Thu nhận hình ảnh – Xử lý AI – Hiển thị/Lưu trữ, có mũi tên thể hiện luồng dữ liệu giữa các khối.}
+
+\subsection{Nguồn dữ liệu hình ảnh đầu vào}
+Hệ thống hỗ trợ hai chế độ thu nhận hình ảnh để thuận tiện sử dụng trong nhiều tình huống khác nhau:
+\begin{itemize}[topsep=0.3ex, itemsep=0.3ex, parsep=0.2ex]
+	\item[-] \textbf{Camera máy chủ:} sử dụng camera kết nối trực tiếp với máy chạy hệ thống.
+	\item[-] \textbf{Webcam trình duyệt:} sử dụng camera của thiết bị người dùng (máy tính cá nhân, laptop) thông qua trình duyệt web.
+\end{itemize}
+Người dùng có thể chuyển đổi giữa hai chế độ này chỉ bằng một thao tác nhấp chuột trên giao diện, không cần khởi động lại hệ thống.
+
+\subsection{Quy trình nhận diện và phân loại theo chu kỳ 5 giây}
+Khi được bật, hệ thống liên tục quét khung hình để phát hiện khuôn mặt, và tự động tập trung quan sát vị trí khuôn mặt gần camera nhất trong trường hợp có nhiều người xuất hiện cùng lúc. Với mỗi lượt khách được phát hiện, hệ thống thực hiện quy trình quan sát theo chu kỳ 5 giây như sau:
+\begin{enumerate}[topsep=0.3ex, itemsep=0.3ex, parsep=0.2ex]
+	\item Thu thập kết quả phân loại cảm xúc liên tục trong suốt 5 giây quan sát.
+	\item Tổng hợp và xác định cấp độ hài lòng chiếm ưu thế (xuất hiện nhiều nhất) trong khoảng thời gian đó, đồng thời tính tỉ lệ phần trăm thể hiện độ ổn định của kết quả.
+	\item Khi kết thúc 5 giây, hệ thống ghi nhận một lượt khách hoàn chỉnh, cập nhật tức thì lên bảng thống kê trên giao diện và lưu trữ dữ liệu.
+\end{enumerate}
+Cơ chế này giúp kết quả cuối cùng ổn định hơn so với việc chỉ dựa vào một khung hình đơn lẻ, đồng thời vẫn đảm bảo tính chất thời gian thực khi quan sát khách hàng trong suốt quá trình sử dụng dịch vụ.
+
+\begin{figure}[H]
+\centering
+\safeimage[width=0.95\linewidth]{hinh4.png}
+\vspace{.7em}
+\caption{Quy trình quan sát và ghi nhận một lượt khách theo chu kỳ 5 giây}
+\end{figure}
+% \noindent\textit{Mô tả hình 4: Sơ đồ các bước: Phát hiện khuôn mặt → Đếm ngược 5 giây (thanh tiến trình) → Tổng hợp cấp độ hài lòng chiếm ưu thế → Ghi nhận và lưu trữ.}
+
+\subsection{Lựa chọn mô hình trí tuệ nhân tạo}
+Hệ thống cho phép người dùng lựa chọn giữa hai loại mô hình phân loại cảm xúc ngay trên giao diện, mà không cần tắt ứng dụng hay ngắt kết nối camera:
+\begin{itemize}[topsep=0.3ex, itemsep=0.3ex, parsep=0.2ex]
+	\item[-] \textbf{Mô hình có sẵn (pre-trained):} được huấn luyện sẵn trên bộ dữ liệu công khai, sử dụng ngay không cần huấn luyện thêm, phù hợp để demo nhanh và ổn định.
+	\item[-] \textbf{Mô hình tự huấn luyện:} do người dùng tự xây dựng thông qua bộ công cụ huấn luyện tích hợp sẵn trong hệ thống.
+\end{itemize}
+
+\subsection{Bộ công cụ tự huấn luyện mô hình riêng}
+Bên cạnh mô hình có sẵn, hệ thống cung cấp một bộ công cụ cho phép người dùng tự huấn luyện mô hình phân loại theo bốn cấp độ hài lòng. Người dùng chuẩn bị các thư mục ảnh tương ứng với từng cấp độ hài lòng, sau đó tiến hành huấn luyện thông qua chức năng có sẵn của hệ thống. Tính năng này giúp mô hình có khả năng thích nghi tốt hơn với đặc điểm khuôn mặt và điều kiện ánh sáng thực tế tại nơi triển khai, thay vì chỉ phụ thuộc hoàn toàn vào dữ liệu công khai.
+
+\subsection{Lưu trữ dữ liệu}
+Sau mỗi lượt ghi nhận, dữ liệu được tự động đồng bộ theo một trong hai hình thức:
+\begin{itemize}[topsep=0.3ex, itemsep=0.3ex, parsep=0.2ex]
+	\item[-] Đồng bộ trực tuyến lên Google Sheets, cho phép truy cập và theo dõi dữ liệu từ xa.
+	\item[-] Lưu trữ cục bộ dưới dạng tệp CSV trong trường hợp không có kết nối mạng.
+\end{itemize}
+Mỗi bản ghi bao gồm các thông tin: số thứ tự lượt khách, cấp độ hài lòng được ghi nhận, thời gian ghi nhận và tỉ lệ phần trăm độ ổn định của kết quả.
+
+\subsection{Xuất báo cáo thống kê}
+Hệ thống hỗ trợ xuất báo cáo dưới dạng tệp Excel (.xlsx) chỉ bằng một thao tác nhấp chuột, gồm hai trang tính:
+\begin{itemize}[topsep=0.3ex, itemsep=0.3ex, parsep=0.2ex]
+	\item[-] \textbf{Trang danh sách chi tiết:} liệt kê từng lượt khách đã được ghi nhận trong phiên làm việc.
+	\item[-] \textbf{Trang thống kê tổng hợp:} tổng hợp số lượt và tỉ lệ phần trăm theo từng cấp độ hài lòng.
+\end{itemize}
+Tính năng này giúp người quản lý dễ dàng lưu trữ, đối chiếu và báo cáo số liệu mà không cần thao tác thủ công trên bảng tính.
+
+%% ============================================================
+\section{Chương 4. Kết quả và thảo luận}
+\label{sec:results}
+
+\subsection{Giao diện hệ thống}
+Giao diện Web dashboard của hệ thống được thiết kế trực quan, gồm khung hiển thị camera theo thời gian thực, đồng hồ đếm ngược 5 giây kèm thanh tiến trình quan sát, kết quả cấp độ hài lòng hiện tại của khách hàng, và bảng thống kê tỉ lệ phần trăm/tổng số lượt khách theo bốn cấp độ. Khi vừa truy cập, hệ thống mặc định ở trạng thái tạm dừng nhằm đảm bảo tính riêng tư; người dùng chủ động bấm nút bắt đầu để kích hoạt nhận diện.
+
+\begin{figure}[H]
+\centering
+\safeimage[width=0.95\linewidth]{hinh5.png}
+\vspace{.7em}
+\caption{Giao diện Web dashboard của hệ thống đánh giá mức độ hài lòng khách hàng}
+\end{figure}
+% \noindent\textit{Mô tả hình 5: Ảnh chụp màn hình giao diện chính, gồm khung camera có khung nhận diện khuôn mặt, đồng hồ đếm ngược, nút Bắt đầu/Tạm dừng, nút chuyển đổi camera, menu chọn mô hình AI, và bảng thống kê bên cạnh.}
+
+\subsection{Kết quả vận hành thử nghiệm}
+Trong quá trình thử nghiệm, hệ thống ghi nhận và phân loại được cảm xúc của người tham gia theo thời gian thực, cập nhật liên tục lên bảng thống kê mà không xảy ra gián đoạn giữa các lượt khách. Bảng \ref{tab:ketqua} minh họa một mẫu số liệu thống kê thu được trong một phiên thử nghiệm.
+
+\begin{table}[H]
+	\centering
+	\fontsize{8pt}{10pt}\selectfont
+	% TODO: thay số liệu bên dưới bằng số liệu thật lấy từ 1 phiên chạy demo của nhóm
+	\caption{Mẫu thống kê kết quả một phiên thử nghiệm}
+	\label{tab:ketqua}
+	\begin{tabular}{lcc}
+		\hline
+		Cấp độ hài lòng & Số lượt ghi nhận & Tỉ lệ (\%) \\
+		\hline
+		Rất hài lòng & -- & -- \\
+		Hài lòng & -- & -- \\
+		Bình thường & -- & -- \\
+		Không hài lòng & -- & -- \\
+		\hline
+		\textbf{Tổng} & \textbf{--} & \textbf{100} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\safeimage[width=0.95\linewidth]{hinh6.png}
+\vspace{.7em}
+\caption{Biểu đồ tỉ lệ phần trăm các cấp độ hài lòng trong phiên thử nghiệm}
+\end{figure}
+% \noindent\textit{Mô tả hình 6: Biểu đồ cột hoặc biểu đồ tròn thể hiện tỉ lệ \% của 4 cấp độ hài lòng, lấy từ bảng thống kê trên dashboard hoặc từ tệp Excel xuất ra.}
+
+\begin{figure}[H]
+\centering
+\safeimage[width=0.95\linewidth]{hinh7.png}
+\vspace{.7em}
+\caption{Mẫu báo cáo Excel xuất ra từ hệ thống}
+\end{figure}
+% \noindent\textit{Mô tả hình 7: Ảnh chụp tệp Excel xuất ra, thể hiện 2 trang tính: danh sách chi tiết từng lượt khách và bảng thống kê tổng hợp.}
+
+\subsection{Tổng hợp các tính năng đã hoàn thành}
+Bảng \ref{tab:tinhnang} tổng hợp các nhóm tính năng chính mà hệ thống đã xây dựng hoàn chỉnh.
+
+\begin{table}[H]
+	\centering
+	\fontsize{8pt}{10pt}\selectfont
+	\caption{Tổng hợp các tính năng đã hoàn thành của hệ thống}
+	\label{tab:tinhnang}
+	\begin{tabular}{p{3.5cm}p{8.5cm}}
+		\hline
+		Nhóm tính năng & Mô tả \\
+		\hline
+		Giao diện Web dashboard & Theo dõi camera thời gian thực, đồng hồ đếm ngược, kết quả tức thì, bảng thống kê tỉ lệ \% và tổng lượt khách \\
+		Camera kép & Chuyển đổi linh hoạt giữa camera máy chủ và webcam trình duyệt \\
+		Điều khiển chủ động & Nút Bắt đầu/Tạm dừng nhận diện, mặc định tạm dừng khi mở trang để đảm bảo quyền riêng tư \\
+		Chuyển đổi mô hình AI & Cho phép chọn giữa mô hình có sẵn và mô hình tự huấn luyện ngay trên giao diện \\
+		Công cụ tự huấn luyện & Cho phép người dùng chuẩn bị dữ liệu và huấn luyện mô hình riêng theo 4 cấp độ hài lòng \\
+		Lưu trữ và xuất báo cáo & Tự động đồng bộ Google Sheets/CSV; xuất báo cáo Excel gồm 2 trang chi tiết và thống kê \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{Thảo luận}
+Kết quả bước đầu cho thấy tính khả thi của việc xây dựng một công cụ hỗ trợ quan sát mức độ hài lòng khách hàng theo thời gian thực dưới dạng ứng dụng Web, dễ triển khai và không đòi hỏi phần cứng chuyên dụng. Việc quy đổi cảm xúc chi tiết thành bốn cấp độ hài lòng giúp kết quả dễ hiểu và dễ sử dụng hơn đối với người quản lý không có chuyên môn kỹ thuật. Tuy nhiên, hệ thống vẫn còn một số hạn chế:
+\begin{itemize}[topsep=0.3ex, itemsep=0.3ex, parsep=0.2ex]
+	\item[-] Độ chính xác của mô hình có thể giảm trong điều kiện ánh sáng yếu, góc chụp nghiêng hoặc khuôn mặt bị che khuất một phần.
+	\item[-] Khi có nhiều khách hàng xuất hiện đồng thời, hệ thống hiện chỉ tập trung quan sát một khuôn mặt gần camera nhất tại một thời điểm.
+	\item[-] Việc quy đổi từ cảm xúc cơ bản sang bốn cấp độ hài lòng mang tính quy ước, có thể cần điều chỉnh thêm dựa trên phản hồi thực tế.
+	\item[-] Dữ liệu thử nghiệm hiện tại còn giới hạn về quy mô và bối cảnh triển khai.
+\end{itemize}
+
+\subsection{Hướng phát triển}
+Trên cơ sở các hạn chế đã nêu, một số hướng phát triển tiếp theo được đề xuất: mở rộng khả năng nhận diện đồng thời nhiều khuôn mặt trong cùng khung hình; thu thập thêm dữ liệu thực tế để cải thiện độ chính xác của mô hình tự huấn luyện; bổ sung cơ chế cảnh báo khi tỉ lệ khách hàng không hài lòng vượt ngưỡng trong một khoảng thời gian; và tiến hành thử nghiệm thí điểm tại một cơ sở dịch vụ thực tế để đánh giá hiệu quả trong môi trường vận hành thật.
+
+%% ============================================================
+\section*{ACKNOWLEDGMENTS (if applicable)}
+\label{}
+Nhóm nghiên cứu xin gửi lời cảm ơn đến giảng viên hướng dẫn học phần Trí tuệ nhân tạo và Ứng dụng đã hỗ trợ, góp ý trong suốt quá trình thực hiện báo cáo.
+
+\section*{FUNDING INFORMATION (mandatory)}
+\label{}
+Authors state no funding involved.
+
+\section*{AUTHOR CONTRIBUTIONS STATEMENT (mandatory)}
+\label{}
+\begin{table}[H]
+	\centering
+	\selectfont
+	\begin{tabular}{lcccccccccccccc}
+		\hline
+		\textbf{Name of Author}\quad\quad\quad\quad\quad\quad & \cellcolor[HTML]{D8F0F8}\textbf{C} & \cellcolor[HTML]{D8F0F8}\textbf{M} & \textbf{So} & \textbf{Va} & \cellcolor[HTML]{D8F0F8}\textbf{Fo} & \cellcolor[HTML]{D8F0F8}\textbf{I} & \textbf{R} & \textbf{D} & \cellcolor[HTML]{FDE9D9}\textbf{O} & \cellcolor[HTML]{FDE9D9}\textbf{E} & \textbf{Vi} & \textbf{Su} & \textbf{P} & \textbf{Fu} \\
+		\hline
+		Đổ Hoài Anh & \cellcolor[HTML]{D8F0F8}\checkmark & \cellcolor[HTML]{D8F0F8}\checkmark & \checkmark & \checkmark & \cellcolor[HTML]{D8F0F8}\checkmark & \cellcolor[HTML]{D8F0F8}\checkmark &  & \checkmark & \cellcolor[HTML]{FDE9D9}\checkmark & \cellcolor[HTML]{FDE9D9}\checkmark &  &  & \checkmark &  \\
+		Trương Văn Triều Vĩ &  \cellcolor[HTML]{D8F0F8}& \cellcolor[HTML]{D8F0F8}\checkmark &  &  & \cellcolor[HTML]{D8F0F8} & \cellcolor[HTML]{D8F0F8}\checkmark &  & \checkmark & \cellcolor[HTML]{FDE9D9}\checkmark & \cellcolor[HTML]{FDE9D9}\checkmark & \checkmark & \checkmark &  &  \\
+		Trần Thanh Vinh & \cellcolor[HTML]{D8F0F8}\checkmark & \cellcolor[HTML]{D8F0F8} & \checkmark & \checkmark & \cellcolor[HTML]{D8F0F8} & \cellcolor[HTML]{D8F0F8}\checkmark &  &  & \cellcolor[HTML]{FDE9D9}\checkmark & \cellcolor[HTML]{FDE9D9} & \checkmark &  & \checkmark & \\
+		Nguyễn Lê Tân Phú & \cellcolor[HTML]{D8F0F8} & \cellcolor[HTML]{D8F0F8} &  &  &\cellcolor[HTML]{D8F0F8}\checkmark & \cellcolor[HTML]{D8F0F8} & \checkmark &  & \cellcolor[HTML]{FDE9D9} & \cellcolor[HTML]{FDE9D9}\checkmark &  &  &  & \\
+		Lê Minh Triết & \cellcolor[HTML]{D8F0F8} & \cellcolor[HTML]{D8F0F8} &  &  & \cellcolor[HTML]{D8F0F8}\checkmark & \cellcolor[HTML]{D8F0F8} &\checkmark &  & \cellcolor[HTML]{FDE9D9} & \cellcolor[HTML]{FDE9D9}\checkmark &  & \checkmark &  & \checkmark\\
+		\hline
+		\multicolumn{15}{c}{
+			\begin{tabular}{llllll}
+				&&&&&\\
+				C &: 	\textbf{C}\fontsize{8}{10}\selectfont onceptualization \quad\quad\quad\quad\quad\quad& I &: 	\textbf{I}\fontsize{8}{10}\selectfont nvestigation & Vi&: 	\textbf{Vi}\fontsize{8}{10}\selectfont sualization  \\
+				M &: 	\textbf{M}\fontsize{8}{10}\selectfont ethodology & R &: 	\textbf{R}\fontsize{8}{10}\selectfont esources & Su&: 	\textbf{Su}\fontsize{8}{10}\selectfont pervision  \\
+				So&: 	\textbf{So}\fontsize{8}{10}\selectfont ftware & D &:	\textbf{D}\fontsize{8}{10}\selectfont ata Curation & P &: 	\textbf{P}\fontsize{8}{10}\selectfont roject Administration  \\
+				Va&: 	\textbf{Va}\fontsize{8}{10}\selectfont lidation & O &:	\fontsize{8}{10}\selectfont Writing - \fontsize{10}{12}\selectfont \textbf{O}\fontsize{8}{10}\selectfont riginal Draft & Fu&: 	\textbf{Fu}\fontsize{8}{10}\selectfont nding Acquisition \\
+				Fo&: 	\textbf{Fo}\fontsize{8}{10}\selectfont rmal Analysis & E &:	\fontsize{8}{10}\selectfont Writing - Review \& \fontsize{10}{12}\selectfont\textbf{E}\fontsize{8}{10}\selectfont diting \quad\quad\quad\quad\quad\quad&  \\
+			\end{tabular}
+		}
+	\end{tabular}
+\end{table}
+% TODO: chỉnh lại dấu \checkmark trong bảng trên theo đúng đóng góp thực tế của từng thành viên
+
+\section*{CONFLICT OF INTEREST STATEMENT (mandatory)}
+\label{}
+Authors state no conflict of interest.
+
+\section*{DATA AVAILABILITY (mandatory)}
+\label{}
+Dữ liệu hỗ trợ cho kết quả nghiên cứu này có thể được cung cấp bởi tác giả liên hệ khi có yêu cầu hợp lý.
+
+\section*{TÀI LIỆU THAM KHẢO}
+\begin{thebibliography}{99}
+\bibitem{goodfellow2013} I. J. Goodfellow et al., ``Challenges in representation learning: A report on three machine learning contests,'' Neural Information Processing, pp. 117--124, 2013.
+\bibitem{howard2017} A. G. Howard et al., ``MobileNets: Efficient convolutional neural networks for mobile vision applications,'' arXiv:1704.04861, 2017.
+\bibitem{viola2001} P. Viola and M. Jones, ``Rapid object detection using a boosted cascade of simple features,'' Proc. CVPR, vol. 1, pp. I-511--I-518, 2001.
+\bibitem{li2017} S. Li and W. Deng, ``Deep facial expression recognition: A survey,'' IEEE Trans. Affective Computing, vol. 13, no. 3, pp. 1195--1215, 2022.
+\bibitem{ekman1971} P. Ekman and W. V. Friesen, ``Constants across cultures in the face and emotion,'' Journal of Personality and Social Psychology, vol. 17, no. 2, pp. 124--129, 1971.
+\bibitem{tensorflow} M. Abadi et al., ``TensorFlow: Large-scale machine learning on heterogeneous systems,'' 2016. [Online]. Available: https://www.tensorflow.org/
+\bibitem{opencv} G. Bradski, ``The OpenCV library,'' Dr. Dobb's Journal, vol. 25, no. 11, pp. 120--126, 2000.
+\bibitem{adam} D. P. Kingma and J. Ba, ``Adam: A method for stochastic optimization,'' Proc. ICLR, 2015.
+\bibitem{dropout} N. Srivastava et al., ``Dropout: A simple way to prevent neural networks from overfitting,'' Journal of Machine Learning Research, vol. 15, pp. 1929--1958, 2014.
+\bibitem{lecun2015} Y. LeCun, Y. Bengio, and G. Hinton, ``Deep learning,'' Nature, vol. 521, pp. 436--444, 2015.
+\bibitem{goodfellow2016} I. Goodfellow, Y. Bengio, and A. Courville, Deep Learning. MIT Press, 2016.
+\bibitem{wang2020} S. Wang et al., ``A review of deep learning based facial expression recognition,'' Image and Vision Computing, vol. 102, 2020.
+\end{thebibliography}
+
+\clearpage
+\section*{BIOGRAPHIES OF AUTHORS}
+
+\vspace{-.7em}
+\small
+
+\begin{biography}[{\safeimage[width=2.5cm,height=4cm,clip,keepaspectratio]{DOHOAIANH.png}}]
+\textbf{Đổ Hoài Anh}\\
+Đổ Hoài Anh hiện là sinh viên năm thứ ba ngành Công nghệ Thông tin tại Trường Đại học Giao thông Vận tải Thành phố Hồ Chí Minh, định hướng chuyên ngành Kỹ sư Phần mềm. Anh quan tâm đến lập trình, phát triển phần mềm và các ứng dụng của trí tuệ nhân tạo trong thực tiễn.
+\end{biography}
+
+\vspace{.7em}
+\begin{biography}[{\safeimage[width=2.5cm,height=4cm,clip,keepaspectratio]{vi.png}}]
+\textbf{Trương Văn Triều Vĩ}\\
+Trương Văn Triều Vĩ hiện là sinh viên ngành Công nghệ Thông tin tại Trường Đại học Giao thông Vận tải Thành phố Hồ Chí Minh. Vĩ quan tâm đến công nghệ, phát triển phần mềm và luôn mong muốn nâng cao kiến thức, kỹ năng chuyên môn trong quá trình học tập.
+\end{biography}
+
+\vspace{.7em}
+\begin{biography}[{\safeimage[width=2.5cm,height=4cm,clip,keepaspectratio]{vinh.png}}]
+\textbf{Trần Thanh Vinh}\\
+Trần Thanh Vinh hiện là sinh viên Trường Đại học Giao thông Vận tải Thành phố Hồ Chí Minh, chuyên ngành Cơ điện tử ô tô. Vinh có niềm đam mê với lĩnh vực ô tô, đặc biệt là hệ thống cơ khí, điện--điện tử và các công nghệ ô tô hiện đại.
+\end{biography}
+
+\vspace{.7em}
+\begin{biography}[{\safeimage[width=2.5cm,height=4cm,clip,keepaspectratio]{phu.jpg}}]
+\textbf{Nguyễn Lê Tân Phú}\\
+Nguyễn Lê Tân Phú hiện là sinh viên ngành Quản lý Cảng và Logistics tại Trường Đại học Giao thông Vận tải Thành phố Hồ Chí Minh. Phú là người cẩn thận, có tinh thần trách nhiệm, tư duy tổ chức và khả năng làm việc nhóm tốt.
+\end{biography}
+
+\vspace{.7em}
+\begin{biography}[{\safeimage[width=2.5cm,height=4cm,clip,keepaspectratio]{triet.png}}]
+\textbf{Lê Minh Triết}\\
+Lê Minh Triết hiện là sinh viên ngành Ngôn ngữ Anh tại Trường Đại học Giao thông Vận tải Thành phố Hồ Chí Minh. Triết có niềm đam mê với tiếng Anh, thích tìm hiểu kiến thức mới và luôn cố gắng phát triển kỹ năng học tập, giao tiếp và làm việc nhóm.
+\end{biography}
+
+\vspace{.7em}
+\begin{biography}[{\safeimage[width=2.5cm,height=4cm,clip,keepaspectratio]{thay.jpg}}]
+\textbf{Thầy Đặng Nhân Cách}\\
+Giảng viên hướng dẫn học phần Trí tuệ nhân tạo và Ứng dụng tại Trường Đại học Giao thông Vận tải Thành phố Hồ Chí Minh. Thầy đã định hướng nội dung, góp ý phương pháp nghiên cứu và hỗ trợ nhóm trong quá trình xây dựng báo cáo.
+\end{biography}
+
+\end{document}
