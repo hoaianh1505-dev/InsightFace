@@ -18,6 +18,7 @@ dataset/
 
 import os
 import sys
+import cv2
 import tensorflow as tf
 from tensorflow.keras import layers, models
 
