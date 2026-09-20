@@ -22,14 +22,17 @@ EMOTION_MODEL_URL = (
 )
 
 def get_available_models() -> list[str]:
-    """Quét và trả về danh sách tên các file model (.h5, .hdf5, .keras) có sẵn."""
+    """Quét và trả về danh sách tên các file model (.h5, .hdf5, .keras) hợp lệ (>100KB)."""
     model_dir = os.path.join(MODELS_DIR, "emotion_model")
     if not os.path.exists(model_dir):
         return []
-    return [
-        f for f in os.listdir(model_dir)
-        if f.endswith((".h5", ".hdf5", ".keras"))
-    ]
+    valid_models = []
+    for f in os.listdir(model_dir):
+        if f.endswith((".h5", ".hdf5", ".keras")):
+            full_p = os.path.join(model_dir, f)
+            if os.path.isfile(full_p) and os.path.getsize(full_p) > 100_000:
+                valid_models.append(f)
+    return valid_models
 
 # ─── Camera ──────────────────────────────────────────────────────────────────
 
