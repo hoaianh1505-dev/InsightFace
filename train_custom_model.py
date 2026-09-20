@@ -93,12 +93,63 @@ def count_images(directory):
         total += len([f for f in files if f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp'))])
     return total
 
+def auto_crop_faces():
+    """Tự động phát hiện và crop khuôn mặt từ các ảnh chưa được crop trong dataset."""
+    builtin = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+    face_cascade = cv2.CascadeClassifier(builtin)
+    if face_cascade.empty():
+        return
+
+    cropped_count = 0
+    print("🔍 Đang tự động quét & crop khuôn mặt từ các ảnh chụp toàn thân/khung hình lớn...")
+
+    for root, _, files in os.walk(DATASET_DIR):
+        for fname in files:
+            if fname.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp')):
+                img_path = os.path.join(root, fname)
+                try:
+                    img = cv2.imread(img_path)
+                    if img is None:
+                        continue
+
+                    h, w = img.shape[:2]
+                    # Nếu ảnh đã là ảnh crop nhỏ (<= 128x128) thì bỏ qua
+                    if h <= 128 and w <= 128:
+                        continue
+
+                    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                    faces = face_cascade.detectMultiScale(
+                        gray,
+                        scaleFactor=1.1,
+                        minNeighbors=4,
+                        minSize=(30, 30)
+                    )
+
+                    if len(faces) > 0:
+                        # Lấy khuôn mặt lớn nhất
+                        x, y, fw, fh = max(faces, key=lambda f: f[2] * f[3])
+                        pad = int(min(fw, fh) * 0.1)
+                        x1 = max(0, x - pad)
+                        y1 = max(0, y - pad)
+                        x2 = min(w, x + fw + pad)
+                        y2 = min(h, y + fh + pad)
+                        face_crop = img[y1:y2, x1:x2]
+                        if face_crop.size > 0:
+                            cv2.imwrite(img_path, face_crop)
+                            cropped_count += 1
+                except Exception:
+                    pass
+
+    if cropped_count > 0:
+        print(f"✅ Đã tự động trích xuất và crop thành công {cropped_count} khuôn mặt!")
+
 def main():
     print("=" * 60)
     print("HUAN LUYEN MO HINH CNN TU THU MUC ANH (DATASET)")
     print("=" * 60)
 
     create_dataset_structure()
+    auto_crop_faces()
     train_count = count_images(TRAIN_DIR)
     val_count = count_images(VAL_DIR)
 
@@ -121,22 +172,32 @@ def main():
     batch_size = 32
     img_size = (48, 48)
 
-    train_ds = tf.keras.utils.image_dataset_from_directory(
-        TRAIN_DIR,
-        color_mode="grayscale",
-        image_size=img_size,
-        batch_size=batch_size,
-        label_mode="categorical",
-    )
-
-    val_ds = None
     if val_count > 0:
+        train_ds = tf.keras.utils.image_dataset_from_directory(
+            TRAIN_DIR,
+            color_mode="grayscale",
+            image_size=img_size,
+            batch_size=batch_size,
+            label_mode="categorical",
+        )
         val_ds = tf.keras.utils.image_dataset_from_directory(
             VAL_DIR,
             color_mode="grayscale",
             image_size=img_size,
             batch_size=batch_size,
             label_mode="categorical",
+        )
+    else:
+        print("Tự động chia 80% Train / 20% Validation từ tập train...")
+        train_ds, val_ds = tf.keras.utils.image_dataset_from_directory(
+            TRAIN_DIR,
+            color_mode="grayscale",
+            image_size=img_size,
+            batch_size=batch_size,
+            label_mode="categorical",
+            validation_split=0.2,
+            subset="both",
+            seed=42,
         )
 
     # Build & compile
